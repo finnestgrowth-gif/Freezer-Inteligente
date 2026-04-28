@@ -26,6 +26,15 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const CHECKOUT_URL = "https://pay.hotmart.com/J105422683B?checkoutMode=10&bid=1776861478856";
 
+// Meta Pixel tracking helper
+const fbPixel = {
+  track: (event: string, data = {}) => {
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', event, data);
+    }
+  }
+};
+
 const SalesNotification = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -303,6 +312,9 @@ const ThumbsUp = ({ className }: { className?: string }) => (
 );
 
 export default function App() {
+  const handleCheckoutClick = () => {
+    fbPixel.track('InitiateCheckout');
+  };
   return (
     <div className="min-h-screen selection:bg-brand-primary/30 selection:text-white">
       <SalesNotification />
@@ -461,6 +473,7 @@ export default function App() {
                 <div className="flex flex-col sm:flex-row gap-4 text-center">
                    <a 
                     href={CHECKOUT_URL}
+                    onClick={handleCheckoutClick}
                     className="w-full sm:w-auto bg-brand-secondary hover:bg-brand-secondary/90 text-white px-6 md:px-10 py-4 rounded-full font-black text-base md:text-lg shadow-2xl shadow-brand-secondary/30 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap"
                    >
                     OBTER O MÉTODO AGORA
@@ -798,6 +811,7 @@ export default function App() {
               
               <a 
                 href={CHECKOUT_URL}
+                onClick={handleCheckoutClick}
                 className="w-full bg-[#1cc800] hover:bg-[#16a300] text-white py-6 md:py-8 rounded-full font-black text-xl md:text-4xl transition-all shadow-2xl shadow-green-200 flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 uppercase tracking-tight"
               >
                 SIM, QUERO O PLANO COMPLETO!
@@ -835,6 +849,7 @@ export default function App() {
 
             <a 
               href={CHECKOUT_URL}
+              onClick={handleCheckoutClick}
               className="inline-flex items-center gap-3 bg-[#f97316] hover:bg-[#ea580c] text-white px-12 py-6 rounded-full font-black text-xl md:text-2xl transition-all shadow-2xl shadow-orange-950/40 transform hover:scale-105 active:scale-95 uppercase tracking-tight group"
             >
               QUERO EXPERIMENTAR 14 DIAS SEM RISCO
@@ -893,6 +908,7 @@ export default function App() {
           >
             <a 
               href={CHECKOUT_URL}
+              onClick={handleCheckoutClick}
               className="inline-flex items-center gap-3 bg-[#1cc800] hover:bg-[#16a300] text-white px-16 py-8 rounded-full font-black text-2xl md:text-4xl transition-all shadow-2xl shadow-green-200 transform hover:scale-105 active:scale-95 uppercase tracking-tighter"
             >
               COMPRAR AGORA
