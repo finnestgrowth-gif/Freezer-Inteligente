@@ -98,58 +98,6 @@ const SalesNotification = () => {
   );
 };
 
-const CountdownBanner = () => {
-  const [timeLeft, setTimeLeft] = useState(3600 + 45 * 60 + 30); // 1h 45m 30s
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return { h, m, s };
-  };
-
-  const { h, m, s } = formatTime(timeLeft);
-
-  return (
-    <div className="bg-brand-dark text-white py-1.5 md:py-2 px-4 sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 md:gap-2">
-          <span className="bg-brand-secondary text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 rounded-full uppercase tracking-tighter md:tracking-wider whitespace-nowrap">
-            Oferta Especial
-          </span>
-          <p className="text-[10px] md:text-sm font-medium leading-none">Aproveite o desconto de 65%</p>
-        </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex gap-1 md:gap-2 text-center">
-            {[h, m, s].map((val, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <span className="bg-white/10 rounded w-6 h-6 md:w-8 md:h-8 flex items-center justify-center font-mono font-bold text-sm md:text-lg leading-none">
-                  {val.toString().padStart(2, '0')}
-                </span>
-                <span className="text-[7px] md:text-[10px] uppercase opacity-60">
-                  {['h', 'm', 's'][i]}
-                </span>
-              </div>
-            ))}
-          </div>
-          <a 
-            href={CHECKOUT_URL}
-            className="bg-brand-primary hover:bg-brand-primary/90 text-brand-dark px-3 md:px-4 py-1 md:py-1.5 rounded-full text-[9px] md:text-xs font-black transition-all shadow-sm whitespace-nowrap inline-block text-center"
-          >
-            PREÇO ESPECIAL
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const SectionHeading = ({ children, subtitle, light = false }: { children: React.ReactNode, subtitle?: string, light?: boolean }) => (
   <div className="text-center mb-12">
@@ -216,151 +164,266 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
   );
 };
 
+interface FacebookTestimonialCardProps {
+  key?: React.Key | number;
+  name: string;
+  content: string;
+  avatar: string;
+  location: string;
+  timestamp: string;
+  postImage: string;
+}
+
+const FacebookTestimonialCard = ({ name, content, avatar, location, timestamp, postImage }: FacebookTestimonialCardProps) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden text-left"
+  >
+    {/* Header */}
+    <div className="p-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <img src={avatar} className="w-10 h-10 rounded-full border border-slate-100 object-cover" alt={name} />
+        <div>
+          <div className="flex items-center gap-1">
+            <span className="font-bold text-[15px] text-[#1c1e21] hover:underline cursor-pointer">{name}</span>
+            <div className="bg-[#1877F2] rounded-full p-0.5">
+              <Check className="w-2 h-2 text-white" />
+            </div>
+          </div>
+          <div className="flex items-center gap-1 text-[13px] text-[#65676b]">
+            <span className="font-medium text-brand-dark/60">{location}</span>
+            <span>•</span>
+            <span>{timestamp}</span>
+            <span>•</span>
+            <Facebook className="w-3 h-3" />
+          </div>
+        </div>
+      </div>
+      <button className="text-[#65676b] hover:bg-slate-100 p-2 rounded-full transition-colors">
+        <Plus className="w-5 h-5 rotate-45" />
+      </button>
+    </div>
+
+    {/* Content */}
+    <div className="px-4 pb-4">
+      <p className="text-[15px] text-[#1c1e21] leading-normal">{content}</p>
+    </div>
+
+    {/* Post Image */}
+    <div className="border-y border-slate-100 bg-slate-50">
+      <img 
+        src={postImage} 
+        className="w-full h-64 object-cover" 
+        alt="Post visual" 
+      />
+    </div>
+
+    {/* Interaction Counts */}
+    <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100 mx-4 px-0">
+      <div className="flex items-center gap-1.5">
+        <div className="flex -space-x-1">
+          <div className="bg-[#1877F2] rounded-full p-1 border-2 border-white">
+            <ThumbsUp className="w-2.5 h-2.5 text-white fill-white" />
+          </div>
+          <div className="bg-[#fa3e3e] rounded-full p-1 border-2 border-white">
+            <Heart className="w-2.5 h-2.5 text-white fill-white" />
+          </div>
+        </div>
+        <span className="text-[13px] text-[#65676b]">{Math.floor(Math.random() * 20) + 12}</span>
+      </div>
+      <div className="text-[13px] text-[#65676b] hover:underline cursor-pointer">
+        {Math.floor(Math.random() * 5) + 1} comentários
+      </div>
+    </div>
+
+    {/* Action Buttons */}
+    <div className="px-4 py-1 flex items-center justify-between text-[#65676b] font-semibold text-[13px] md:text-[14px]">
+      <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 rounded-md transition-colors">
+        <ThumbsUp className="w-5 h-5" />
+        <span>Amei</span>
+      </button>
+      <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 rounded-md transition-colors">
+        <MessageSquare className="w-5 h-5" />
+        <span>Comentar</span>
+      </button>
+      <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 rounded-md transition-colors">
+        <Share2 className="w-5 h-5" />
+        <span>Compartilhar</span>
+      </button>
+    </div>
+
+    {/* Comment Footer */}
+    <div className="px-4 py-3 bg-slate-50 border-t border-slate-100">
+       <div className="flex items-center gap-2 mb-2">
+         <span className="text-[12px] font-bold text-[#65676b] hover:underline cursor-pointer">Ver mais {Math.floor(Math.random() * 5) + 1} comentários</span>
+       </div>
+       <div className="flex items-start gap-2">
+         <img src="https://iili.io/B4KZeWl.png" className="w-8 h-8 rounded-full object-cover mt-1" alt="Me" />
+         <div className="flex-1 relative">
+           <input 
+            type="text" 
+            placeholder="Escreva um comentário..." 
+            className="w-full bg-[#f0f2f5] rounded-2xl px-4 py-2 text-[13px] border-none focus:ring-0"
+           />
+         </div>
+       </div>
+    </div>
+  </motion.div>
+);
+
+const Heart = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+  </svg>
+);
+
+const MessageSquare = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+const Share2 = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+    <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+  </svg>
+);
+
+const ThumbsUp = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 10v12" />
+    <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+  </svg>
+);
+
 export default function App() {
   return (
     <div className="min-h-screen selection:bg-brand-primary/30 selection:text-white">
-      <CountdownBanner />
       <SalesNotification />
 
       {/* Hero Section */}
-      <section className="relative pt-12 pb-24 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-primary/5 -skew-x-12 transform origin-top translate-x-20 hidden lg:block" />
+      <section className="relative pt-12 md:pt-14 pb-16 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-brand-primary/5 hidden lg:block" />
         
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-2 bg-brand-primary/10 text-brand-dark px-3 py-1 rounded-full text-xs font-bold mb-6"
-              >
-                <Utensils className="w-3 h-3" />
-                <span>250 Receitas Saudáveis para Congelar</span>
-              </motion.div>
-              
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-4xl md:text-6xl font-bold leading-tight mb-6"
-              >
-                A sua nova rotina na cozinha começa aqui
-              </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-lg md:text-xl text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium"
-              >
-                Organize as suas refeições, poupe tempo e tenha sempre opções saudáveis prontas — sem complicações.
-                <br /><br />
-                Adquira hoje o Freezer Inteligente – 250 Receitas Saudáveis para Congelar e receba todos os bónus de imediato.
-              </motion.p>
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mb-8"
-              >
-                <a 
-                  href={CHECKOUT_URL}
-                  className="w-full sm:w-auto bg-brand-secondary hover:bg-brand-secondary/90 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-brand-secondary/20 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
-                >
-                  SIM, QUERO COMEÇAR AGORA
-                  <ChevronRight className="w-5 h-5" />
-                </a>
-              </motion.div>
+        <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-5xl font-bold leading-tight mb-3 md:mb-4 text-brand-primary"
+          >
+            Deixe de ser refém da cozinha.
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-base md:text-lg text-slate-600 mb-6 md:mb-8 max-w-3xl mx-auto leading-normal font-medium px-2"
+          >
+            Pare de perder horas todos os dias a pensar no que cozinhar, a preparar refeições e a lidar com o stress de não ter nada pronto.
+            <br className="hidden md:block" />
+            Organize tudo de uma vez, poupe tempo durante a semana e tenha sempre refeições saudáveis à mão — sem complicações.
+          </motion.p>
 
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4"
-              >
-                {[
-                  { icon: <ShieldCheck className="w-4 h-4" />, text: "Compra segura" },
-                  { icon: <Star className="w-4 h-4" />, text: "Garantia de satisfação" },
-                  { icon: <Award className="w-4 h-4" />, text: "Acesso sem limite de tempo" },
-                  { icon: <Timer className="w-4 h-4" />, text: "Poupe tempo no dia a dia" }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                    <span className="text-brand-primary">{item.icon}</span>
-                    {item.text}
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, rotate: 2 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              className="relative mt-12 lg:mt-0 max-w-[320px] sm:max-w-md mx-auto lg:max-w-none"
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, rotate: 2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ delay: 0.2 }}
+            className="relative mb-6 md:mb-10 max-w-lg md:max-w-xl mx-auto"
+          >
+            <div className="absolute inset-x-0 inset-y-10 bg-brand-secondary/10 rounded-[3rem] blur-3xl" />
+            <img 
+              src="https://iili.io/B4KKyTN.png" 
+              alt="Meal Prep" 
+              className="relative rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-10 object-cover w-full h-auto"
+            />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col items-center gap-6 mb-8 px-2"
+          >
+            <a 
+              href="#checkout"
+              className="w-full sm:w-auto bg-brand-secondary hover:bg-brand-secondary/90 text-white px-6 md:px-8 py-4 rounded-full font-black text-base md:text-lg shadow-2xl shadow-brand-secondary/30 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 md:gap-3 uppercase tracking-wide whitespace-nowrap"
             >
-              <div className="absolute inset-0 bg-brand-secondary/10 rounded-[3rem] blur-3xl" />
-              <img 
-                src="https://iili.io/B4KKyTN.png" 
-                alt="Meal Prep" 
-                className="relative rounded-3xl shadow-2xl z-10 border-4 md:border-8 border-white object-cover w-full h-auto"
-              />
-              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white p-3 md:p-4 rounded-2xl shadow-xl z-20 flex items-center gap-2 md:gap-3 border border-slate-100">
-                <div className="bg-brand-primary/20 p-2 rounded-lg">
-                  <Leaf className="w-5 h-5 md:w-6 md:h-6 text-brand-dark" />
+              QUERO MAIS TEMPO NA COZINHA
+              <ChevronRight className="w-6 h-6 flex-shrink-0" />
+            </a>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-wrap justify-center gap-6"
+            >
+              {[
+                { icon: <ShieldCheck className="w-4 h-4" />, text: "Compra segura" },
+                { icon: <Star className="w-4 h-4" />, text: "Garantia de satisfação" },
+                { icon: <Award className="w-4 h-4" />, text: "Acesso vitalício" },
+                { icon: <Timer className="w-4 h-4" />, text: "Poupe tempo" }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                  <span className="text-brand-primary">{item.icon}</span>
+                  {item.text}
                 </div>
-                <div>
-                  <p className="text-sm md:text-lg font-bold text-brand-dark">+250 Receitas</p>
-                </div>
-              </div>
-              <div className="absolute -top-16 -right-2 md:-top-20 md:-right-10 bg-brand-secondary text-white p-2 md:p-4 rounded-full shadow-xl z-20 w-20 h-20 md:w-32 md:h-32 flex flex-col items-center justify-center rotate-12">
-                <p className="text-[6px] md:text-[10px] font-bold uppercase tracking-tight">De € 29</p>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-lg md:text-3xl font-black">€ 10</span>
-                </div>
-                <p className="text-[5px] md:text-[10px] font-bold uppercase tracking-tight mt-0.5 leading-none text-center">Pagamento Único</p>
-              </div>
+              ))}
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features List Section */}
+      {/* Problem Section */}
       <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4">
-          <SectionHeading subtitle="Muito mais do que um simples livro de receitas. É um método completo para transformar a sua rotina e melhorar a sua saúde.">
-            O que vai encontrar neste livro?
+          <SectionHeading subtitle={
+            <>
+              Chega ao fim do dia cansada, sem ideias e ainda com a responsabilidade de preparar tudo do zero.
+              <br />
+              Não é falta de organização... é falta de um sistema que funcione para si.
+            </>
+          }>
+            O problema não é cozinhar… é ter de cozinhar todos os dias.
           </SectionHeading>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <BenefitCard 
-              icon={<Utensils />}
-              title="250 Receitas Prontas a Congelar"
-              description="Receitas completas, testadas e pensadas para manter sabor, textura e valor nutricional mesmo após congelação."
+              icon={<span className="text-2xl">⏱</span>}
+              title="Falta de tempo todos os dias"
+              description="Depois de um dia inteiro, ainda precisa de pensar no que fazer para o jantar e passar tempo na cozinha."
             />
             <BenefitCard 
-              icon={<Leaf />}
-              title="Opções para Diferentes Alimentações"
-              description="Receitas identificadas de forma clara: sem glúten, sem lactose e opções vegetarianas — fácil de adaptar ao seu dia a dia."
+              icon={<span className="text-2xl">😩</span>}
+              title="Cansaço mental constante"
+              description="Decidir refeições todos os dias desgasta — e muitas vezes acaba por escolher o mais rápido, não o melhor."
             />
             <BenefitCard 
-              icon={<Timer />}
-              title="Poupe Tempo e Dinheiro"
-              description="Prepare tudo de uma só vez e evite desperdícios — menos idas ao supermercado e menos refeições fora."
+              icon={<span className="text-2xl">💸</span>}
+              title="Gastos desnecessários"
+              description="Vai ao supermercado várias vezes por semana, desperdiça comida e recorre mais vezes a refeições fora de casa."
             />
             <BenefitCard 
-              icon={<ShieldCheck />}
-              title="Controlo de Calorias Simplificado"
-              description="Saiba exatamente o que está a comer, com refeições equilibradas e pensadas para o seu bem-estar."
+              icon={<span className="text-2xl">🥗</span>}
+              title="Alimentação inconsistente"
+              description="Quer comer melhor, mas sem planeamento acaba por cair na desorganização."
             />
             <BenefitCard 
-              icon={<Zap />}
-              title="Método Freezer Inteligente"
-              description="Aprenda a planear, preparar e congelar refeições que se mantêm frescas e saborosas durante semanas."
+              icon={<span className="text-2xl">🔁</span>}
+              title="Rotina repetitiva e cansativa"
+              description="Cozinhar deixa de ser algo prazeroso e passa a ser apenas mais uma obrigação."
             />
             <BenefitCard 
-              icon={<Award />}
-              title="Guia Prático de Conservação"
-              description="Descubra como armazenar corretamente os alimentos para garantir qualidade, segurança e durabilidade."
+              icon={<span className="text-2xl">❌</span>}
+              title="Sensação de falta de controlo"
+              description="Sente que anda sempre a correr atrás das refeições… em vez de ter tudo organizado."
             />
           </div>
         </div>
@@ -372,31 +435,36 @@ export default function App() {
           <div className="bg-brand-dark rounded-3xl overflow-hidden shadow-2xl relative">
             <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
             <div className="grid lg:grid-cols-2">
-              <div className="p-12 md:p-16 relative z-10 flex flex-col justify-center">
-                <p className="text-brand-primary font-bold tracking-widest text-sm mb-4 uppercase">A sua rotina vai mudar</p>
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
-                  Tudo pensado para o seu <span className="text-brand-primary italic">bem-estar</span>
+              <div className="p-6 md:p-16 relative z-10 flex flex-col justify-center">
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                  Não precisa de cozinhar todos os <br className="hidden md:block" /> dias.
                 </h2>
-                <ul className="space-y-4 mb-10 text-white/80">
-                  <li className="flex items-start gap-3">
-                    <div className="bg-brand-primary/20 p-1 rounded-full mt-1 flex-shrink-0"><Check className="w-4 h-4 text-brand-primary" /></div>
-                    <span>Planeamento semanal inteligente em menos de 15 minutos</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="bg-brand-primary/20 p-1 rounded-full mt-1 flex-shrink-0"><Check className="w-4 h-4 text-brand-primary" /></div>
-                    <span>Como organizar o seu frigorífico para máxima frescura e higiene</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="bg-brand-primary/20 p-1 rounded-full mt-1 flex-shrink-0"><Check className="w-4 h-4 text-brand-primary" /></div>
-                    <span>Snacks saudáveis que pode levar para o trabalho ou para fora de casa</span>
-                  </li>
+                <p className="text-lg text-white/90 mb-8 leading-relaxed font-medium">
+                  Com o método Freezer Inteligente, deixa de viver no improviso e passa a ter controlo total sobre a sua alimentação.
+                </p>
+                <ul className="grid sm:grid-cols-1 md:grid-cols-1 gap-y-4 mb-10 text-white/80">
+                  {[
+                    "Método Freezer Inteligente – 250 Receitas Saudáveis para Congelar",
+                    "Bônus 1 - Guia de Marinados Express",
+                    "Bônus 2 - Snacks Saudáveis",
+                    "Bônus 3 - Planejamento + Lista de compras",
+                    "Acesso vitalício com todas as atualizações incluídas"
+                  ].map((benefit, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="bg-brand-primary/20 p-1 rounded-full mt-1 flex-shrink-0">
+                        <Check className="w-4 h-4 text-brand-primary" />
+                      </div>
+                      <span className="text-sm md:text-base font-medium">{benefit}</span>
+                    </li>
+                  ))}
                 </ul>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 text-center">
                    <a 
                     href={CHECKOUT_URL}
-                    className="bg-brand-primary text-brand-dark px-8 py-4 rounded-full font-bold hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto bg-brand-secondary hover:bg-brand-secondary/90 text-white px-6 md:px-10 py-4 rounded-full font-black text-base md:text-lg shadow-2xl shadow-brand-secondary/30 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap"
                    >
                     OBTER O MÉTODO AGORA
+                    <ChevronRight className="w-6 h-6 flex-shrink-0" />
                   </a>
                 </div>
               </div>
@@ -412,57 +480,42 @@ export default function App() {
         </div>
       </section>
 
-      {/* Bonus Section */}
+      {/* Recipe Preview Section */}
       <section className="py-24 bg-brand-primary/5">
         <div className="max-w-7xl mx-auto px-4">
-          <SectionHeading subtitle="Ao garantir hoje o seu acesso, recebe estes bónus exclusivos avaliados em mais de 50€.">
-            Bónus Especiais Gratuitos
+          <SectionHeading subtitle="Estas são apenas algumas das mais de 250 receitas que terá acesso imediato.">
+            Um pequeno exemplo do que vai receber
           </SectionHeading>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { 
-                tag: "Bónus 1",
-                title: "Guia de Marinadas", 
-                subtitle: "Dê mais sabor às suas refeições em poucos minutos",
-                description: "Aprenda combinações simples e práticas para transformar carnes, peixes e legumes antes de congelar ou cozinhar.",
-                image: "https://iili.io/B4KSc5N.webp"
-              },
-              { 
-                tag: "Bónus 2",
-                title: "Snacks Saudáveis", 
-                subtitle: "Tenha sempre opções rápidas e nutritivas à mão",
-                description: "Receitas práticas para snacks do dia a dia — perfeitas para levar consigo ou manter prontos em casa.",
-                image: "https://iili.io/B4KSMss.webp"
-              },
-              { 
-                tag: "Bónus 3",
-                title: "Planeamento + Lista de Compras", 
-                subtitle: "Organize a sua semana sem complicações",
-                description: "Um sistema simples para planear refeições e fazer compras de forma eficiente.",
-                image: "https://iili.io/B4KSEzX.webp"
-              }
-            ].map((bonus, i) => (
+              { title: "Almôndegas de Peru com Molho de Tomate", image: "https://iili.io/BidQQZ7.jpg" },
+              { title: "Arroz de Atum Saudável com Legumes", image: "https://iili.io/BidQb6u.jpg" },
+              { title: "Arroz de Frango com Legumes", image: "https://iili.io/BidZq6g.jpg" },
+              { title: "Frango com legumes e arroz integral", image: "https://iili.io/BidZutI.jpg" },
+              { title: "Grão de Bico Estufado com Espinafres", image: "https://iili.io/BidZMtS.jpg" },
+              { title: "Massa Integral com Atum e Espinafres", image: "https://iili.io/Bidtcs1.jpg" },
+              { title: "Puré de Batata e Couve Flor com Carne Picada", image: "https://iili.io/BidDap4.jpg" },
+              { title: "Salmão no Forno com Legumes Assados", image: "https://iili.io/BidDU6F.jpg" }
+            ].map((recipe, i) => (
               <motion.div 
                 key={i}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-md border border-brand-primary/10"
+                whileHover={{ y: -5 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-md border border-brand-primary/10 group"
               >
-                <div className="h-48 bg-slate-200">
+                <div className="aspect-[4/3] overflow-hidden">
                   <img 
-                    src={bonus.image} 
-                    alt={bonus.title}
-                    className="w-full h-full object-cover"
+                    src={recipe.image} 
+                    alt={recipe.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
-                <div className="p-6">
-                  <span className="text-[10px] font-black text-brand-secondary uppercase tracking-widest bg-brand-secondary/10 px-2 py-1 rounded">{bonus.tag}</span>
-                  <h3 className="text-xl font-bold mt-3 mb-1 text-brand-dark">{bonus.title}</h3>
-                  <p className="text-sm font-bold text-slate-900 mb-3 leading-tight">{bonus.subtitle}</p>
-                  <p className="text-slate-600 text-sm mb-4 leading-relaxed">{bonus.description}</p>
-                  <div className="flex items-center gap-1 text-brand-dark font-bold text-xs">
-                    <Check className="w-3 h-3 text-brand-primary" /> INCLUÍDO NO PACOTE
-                  </div>
+                <div className="p-5">
+                  <h3 className="text-sm md:text-base font-bold text-slate-800 leading-snug">{recipe.title}</h3>
                 </div>
               </motion.div>
             ))}
@@ -471,7 +524,7 @@ export default function App() {
       </section>
 
       {/* Social Proof / Testimonials */}
-      <section className="py-24">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <SectionHeading subtitle="Veja o testemunho de quem já transformou a sua relação com a cozinha">
             Resultados de quem já utiliza o método
@@ -482,147 +535,38 @@ export default function App() {
                { 
                  name: "Ana Martins", 
                  location: "Lisboa",
+                 timestamp: "Há 2 dias",
                  content: "O meu frigorífico nunca esteve tão organizado. Agora chego a casa cansada e em poucos minutos tenho uma refeição pronta. Faz mesmo diferença no dia a dia.",
-                 avatar: "https://iili.io/B4KZeWl.png" 
+                 avatar: "https://iili.io/B4KZeWl.png",
+                 postImage: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800"
                },
                { 
                  name: "Catarina Silva", 
                  location: "Porto",
+                 timestamp: "Há 5 dias",
                  content: "Como mãe de dois filhos pequenos, o tempo é muito limitado. Este método ajudou-me imenso a organizar as refeições e a reduzir o stress na cozinha.",
-                 avatar: "https://iili.io/B4f98jn.png" 
+                 avatar: "https://iili.io/B4f98jn.png",
+                 postImage: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800"
                },
                { 
                  name: "Nelson Augusto", 
                  location: "Coimbra",
+                 timestamp: "Há 1 semana",
                  content: "Deixei de recorrer a comida pronta ou encomendas por falta de tempo. Assim é muito mais fácil manter uma alimentação equilibrada.",
-                 avatar: "https://iili.io/B4f2I8Q.png" 
+                 avatar: "https://iili.io/B4f2I8Q.png",
+                 postImage: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800"
                }
              ].map((t, i) => (
-               <div key={i} className="bg-slate-50 p-8 rounded-3xl relative border border-slate-100">
-                 <Quote className="absolute top-6 right-6 w-12 h-12 text-slate-200" />
-                 <div className="flex items-center gap-4 mb-6">
-                   <img src={t.avatar} className="w-12 h-12 rounded-full border-2 border-brand-primary" alt={t.name} />
-                   <div>
-                     <p className="font-bold text-slate-900">{t.name}</p>
-                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t.location}</p>
-                     <div className="flex gap-0.5 mt-1">
-                       {[...Array(5)].map((_, j) => <Star key={j} className="w-3 h-3 fill-brand-secondary text-brand-secondary" />)}
-                     </div>
-                   </div>
-                 </div>
-                 <p className="text-slate-600 italic leading-relaxed">"{t.content}"</p>
-               </div>
-             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Guarantee Section */}
-      <section className="py-24 bg-brand-dark text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full bg-checkered opacity-5" />
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-brand-secondary shadow-2xl shadow-brand-secondary/20"
-          >
-            <ShieldCheck className="w-16 h-16 text-brand-secondary" />
-          </motion.div>
-          <h2 className="text-4xl font-bold mb-6">Risco Zero: Garantia Incondicional de 7 Dias</h2>
-          <p className="text-lg text-white/70 mb-10 leading-relaxed max-w-3xl mx-auto">
-            Se, por algum motivo, sentir que este método não é para si, basta enviar um <span className="whitespace-nowrap">e-mail</span>. Devolvemos 100% do valor pago de forma imediata — sem perguntas, sem burocracias.
-          </p>
-          <div className="flex flex-col items-center">
-            <a 
-              href={CHECKOUT_URL}
-              className="bg-brand-secondary text-white px-12 py-5 rounded-full font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-brand-secondary/40 mb-6"
-            >
-              QUERO EXPERIMENTAR 7 DIAS SEM RISCO
-            </a>
-            <div className="flex items-center gap-2 opacity-60 text-sm font-medium">
-              🔒 Pagamento seguro | Acesso imediato | Garantia de 7 dias
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final Offer Section */}
-      <section id="checkout" className="py-24 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-slate-900">A sua nova rotina na cozinha começa aqui</h2>
-              <p className="text-brand-dark font-bold mb-4 text-lg">Organize as suas refeições, poupe tempo e tenha sempre opções saudáveis prontas — sem complicações.</p>
-              <p className="text-slate-600 mb-8 text-md font-medium">Adquira hoje o Freezer Inteligente – 250 Receitas Saudáveis para Congelar e receba todos os bónus de imediato.</p>
-              <div className="space-y-4 mb-8">
-                {[
-                  "Acesso imediato ao livro com 250 receitas prontas a congelar",
-                  "Bónus: Guia de Marinadas",
-                  "Bónus: Snacks Saudáveis",
-                  "Bónus: Planeamento + Lista de Compras",
-                  "Acesso vitalício + futuras atualizações incluídas"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="bg-brand-primary rounded-full p-1 flex-shrink-0"><Check className="w-4 h-4 text-brand-dark" /></div>
-                    <span className="font-semibold text-slate-700">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl overflow-hidden relative">
-                 <div className="absolute top-0 right-0 bg-brand-primary text-brand-dark px-4 py-1 font-bold text-[10px] uppercase rounded-bl-xl">MAIS VENDIDO</div>
-                 <div className="flex items-baseline gap-2 mb-2">
-                   <span className="text-sm text-slate-400 line-through">De 29€</span>
-                   <span className="text-brand-secondary font-bold text-sm">Oferta de lançamento:</span>
-                 </div>
-                 <div className="text-7xl font-black mb-6 text-slate-900 flex items-baseline gap-1">
-                   <span className="text-3xl font-bold">10€</span>
-                 </div>
-                  <a 
-                    href={CHECKOUT_URL}
-                    className="w-full bg-brand-dark hover:bg-black text-white py-5 rounded-2xl font-bold text-xl transition-all shadow-xl shadow-brand-dark/20 flex items-center justify-center gap-2"
-                  >
-                    SIM, QUERO COMEÇAR AGORA
-                    <ChevronRight className="w-6 h-6" />
-                  </a>
-                 <div className="text-center mt-4 text-slate-500 text-sm font-medium">
-                   🔒 Pagamento seguro | Acesso imediato | Garantia de 7 dias
-                 </div>
-              </div>
-            </div>
-            <div className="relative mt-12 lg:mt-0">
-               <div className="absolute -inset-10 bg-brand-primary/10 rounded-full blur-[120px] -z-10" />
-               <img 
-                 src="https://iili.io/B4FyTEQ.png" 
-                 alt="Final Call" 
-                 className="rounded-3xl shadow-2xl ring-4 md:ring-8 ring-white w-full max-w-md mx-auto" 
+               <FacebookTestimonialCard 
+                 key={i}
+                 name={t.name}
+                 content={t.content}
+                 avatar={t.avatar}
+                 location={t.location}
+                 timestamp={t.timestamp}
+                 postImage={t.postImage}
                />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <SectionHeading>Perguntas Frequentes</SectionHeading>
-          <div className="mt-8 bg-slate-50/50 rounded-3xl p-4 md:p-8 border border-slate-100">
-            <FAQItem 
-              question="Como recebo o acesso ao livro?"
-              answer="O acesso é totalmente digital e imediato após a confirmação do pagamento. Receberá um e-mail automático com os dados de acesso para descarregar o livro principal e todos os bónus em formato PDF de alta qualidade."
-            />
-            <FAQItem 
-              question="Os ingredientes são fáceis de encontrar?"
-              answer="Sim, sem dúvida. As receitas foram adaptadas à realidade em Portugal. Encontrará tudo o que precisa em supermercados ou no seu comércio local."
-            />
-            <FAQItem 
-              question="Não tenho um congelador grande. Funciona para mim?"
-              answer="Sim. O método foi pensado para otimizar o espaço disponível. Vai aprender a utilizar recipientes e técnicas que ajudam a organizar melhor o congelador, independentemente do tamanho — seja um frigorífico combinado ou um modelo maior."
-            />
-            <FAQItem 
-              question="Durante quanto tempo tenho acesso?"
-              answer="O acesso é vitalício. Depois de adquirir, o conteúdo é seu para sempre, incluindo futuras atualizações que venham a ser adicionadas."
-            />
+             ))}
           </div>
         </div>
       </section>
@@ -657,6 +601,307 @@ export default function App() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Bonus Section */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <SectionHeading>
+            Bónus exclusivos para simplificar ainda mais a sua rotina
+          </SectionHeading>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {[
+              { 
+                title: "Bónus 1 — Guia de Marinadas", 
+                description: "Dê mais sabor às suas refeições sem complicar. Aprenda combinações simples e práticas para transformar carnes, peixes e legumes em pratos mais saborosos — prontos a congelar.",
+                image: "https://iili.io/Bi2ALOJ.png"
+              },
+              { 
+                title: "Bónus 2 — Snacks Saudáveis", 
+                description: "Tenha sempre opções rápidas e equilibradas à mão. Ideias práticas para lanches que pode preparar com antecedência e evitar escolhas pouco saudáveis no dia a dia.",
+                image: "https://iili.io/Bi2RkdX.png"
+              },
+              { 
+                title: "Bónus 3 — Planeamento + Lista de Compras", 
+                description: "Organize toda a sua semana sem esforço. Um método simples para planear refeições e uma lista de compras pronta a usar, para poupar tempo e evitar desperdícios.",
+                image: "https://iili.io/Bi250Cl.png"
+              }
+            ].map((bonus, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -10 }}
+                className="bg-white rounded-3xl overflow-hidden shadow-xl border border-slate-100 flex flex-col h-full group transition-all duration-300 hover:shadow-2xl"
+              >
+                <div className="h-64 overflow-hidden bg-slate-100 relative">
+                  <img 
+                    src={bonus.image} 
+                    alt={bonus.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute top-4 right-4 bg-brand-secondary text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                    Grátis
+                  </div>
+                </div>
+                <div className="p-8 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold mb-4 text-brand-dark leading-tight">{bonus.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed flex-1">
+                    {bonus.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final Offer Summary Section */}
+      <section id="checkout-summary" className="py-24 bg-white border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-brand-dark leading-tight font-serif italic">
+              Em resumo, é isto que vai receber hoje:
+            </h2>
+          </div>
+
+          <div className="space-y-0 mb-12">
+            {[
+              { text: "Método Freezer Inteligente – 250 Receitas Saudáveis para Congelar", label: "Incluído", isMain: true },
+              { text: "Bónus 1 — Guia de Marinados Express", label: "Bónus Grátis" },
+              { text: "Bónus 2 — Snacks Saudáveis", label: "Bónus Grátis" },
+              { text: "Bónus 3 — Planeamento + Lista de compras", label: "Bónus Grátis" },
+              { text: "Acesso vitalício e direito a todas as atualizações", label: "Bónus Grátis" }
+            ].map((item, i) => (
+              <div key={i} className="flex items-center justify-between py-6 border-b border-slate-100 last:border-0 hover:bg-slate-50/30 transition-colors px-2">
+                <div className="flex items-center gap-4">
+                  {item.isMain ? (
+                    <div className="w-8 h-8 rounded-full border-2 border-green-500 flex items-center justify-center flex-shrink-0 bg-green-50/50">
+                      <Check className="w-5 h-5 text-green-500 stroke-[3px]" />
+                    </div>
+                  ) : (
+                    <Plus className="w-8 h-8 text-slate-200 flex-shrink-0" />
+                  )}
+                  <span className={`text-base md:text-xl font-bold ${item.isMain ? 'text-brand-dark' : 'text-slate-600'}`}>
+                    {item.text}
+                  </span>
+                </div>
+                <span className={`text-sm font-bold whitespace-nowrap ml-4 ${item.isMain ? 'text-green-600' : 'text-slate-400 opacity-70'}`}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-10 border-t-2 border-brand-dark flex flex-col md:flex-row justify-between items-center md:items-end gap-6">
+            <div className="text-center md:text-left">
+              <h3 className="text-3xl md:text-4xl font-black text-brand-dark uppercase tracking-tight">
+                VALOR TOTAL DESTA OFERTA
+              </h3>
+            </div>
+            <div className="text-center md:text-right">
+              <p className="text-5xl md:text-6xl text-slate-400 line-through font-medium leading-none mb-2">77.00€</p>
+              <p className="text-green-600 font-bold text-xs uppercase tracking-widest">VALOR ESTIMADO</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The Stack Card Checklist Section */}
+      <section id="checkout" className="py-24 bg-[#0055ff] border-t border-blue-600 overflow-hidden">
+        <div className="max-w-3xl mx-auto px-4">
+          {/* Card Container */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-[2.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border-4 border-white overflow-hidden relative"
+          >
+            {/* Top Banners */}
+            <div className="bg-[#1cc800] text-white text-center py-3 font-black text-lg md:text-xl uppercase tracking-[0.2em] shadow-inner">
+              PLANO COMPLETO
+            </div>
+            <div className="bg-[#ff0000] text-white text-center py-4 font-black text-xl md:text-3xl uppercase tracking-wider relative">
+              COMBO COMPLETO + TODOS OS BÔNUS
+            </div>
+
+            {/* Visual Image Banner */}
+            <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
+              <img 
+                src="https://iili.io/B4KKyTN.png" 
+                alt="Pack Completo" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-40" />
+            </div>
+
+            {/* Top Pricing Callout */}
+            <div className="p-8 text-center border-b border-slate-100">
+              <p className="text-[#ff3b30] font-black text-xl md:text-2xl line-through mb-1">Valor Total: 77,00€</p>
+              <p className="text-slate-800 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-4">HOJE PAGAMENTO ÚNICO</p>
+              <div className="text-8xl md:text-[8rem] font-black text-[#1cc800] tracking-tighter mb-2 flex justify-center items-start leading-[0.85]">
+                <span className="text-4xl mt-4">€</span>10
+              </div>
+            </div>
+
+            {/* Detailed Item List */}
+            <div className="px-6 md:px-12 py-12 space-y-10 bg-white">
+              {[
+                { 
+                  title: "MÉTODO FREEZER INTELIGENTE:", 
+                  desc: "250 Receitas Saudáveis para Congelar. O guia completo para transformar a sua rotina.",
+                },
+                { 
+                  title: "BÔNUS 1 — GUIA DE MARINADOS EXPRESS:", 
+                  desc: "Dê mais sabor às suas refeições sem complicar. Aprenda combinações simples e práticas.",
+                },
+                { 
+                  title: "BÔNUS 2 — SNACKS SAUDÁVEIS:", 
+                  desc: "Tenha sempre opções rápidas e equilibradas à mão. Ideias práticas para lanches.",
+                },
+                { 
+                  title: "BÔNUS 3 — PLANEAMENTO + LISTA DE COMPRAS:", 
+                  desc: "Organize toda a sua semana sem esforço. Método simples para planear refeições.",
+                },
+                { 
+                  title: "DIREITO A TODAS AS ATUALIZAÇÕES + ACESSO VITALÍCIO", 
+                  desc: "Tem acesso para sempre ao conteúdo, incluindo todas as melhorias e novas receitas futuras.",
+                }
+              ].map((item, i) => (
+                <div key={i} className="flex gap-4 items-start group">
+                  <div className="w-8 h-8 rounded-full bg-[#1cc800] flex-shrink-0 flex items-center justify-center mt-1 shadow-lg shadow-green-100">
+                    <Check className="w-5 h-5 text-white stroke-[4px]" />
+                  </div>
+                  <div>
+                    <h4 className="font-black text-brand-dark text-base md:text-lg leading-tight uppercase tracking-tight">
+                      {item.title}
+                    </h4>
+                    <p className="text-slate-500 text-sm md:text-base mt-2 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Final Pricing & CTA */}
+            <div className="p-8 md:p-12 bg-slate-50 border-t border-slate-100 text-center">
+              <p className="text-[#ff3b30] font-black text-xl md:text-2xl line-through mb-1">Valor Total: 77,00€</p>
+              <p className="text-slate-800 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-4">HOJE PAGAMENTO ÚNICO</p>
+              <div className="text-8xl md:text-[8rem] font-black text-[#1cc800] tracking-tighter mb-8 flex justify-center items-start leading-[0.85]">
+                <span className="text-4xl mt-4">€</span>10
+              </div>
+              
+              <a 
+                href={CHECKOUT_URL}
+                className="w-full bg-[#1cc800] hover:bg-[#16a300] text-white py-6 md:py-8 rounded-full font-black text-xl md:text-4xl transition-all shadow-2xl shadow-green-200 flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 uppercase tracking-tight"
+              >
+                SIM, QUERO O PLANO COMPLETO!
+              </a>
+              <p className="mt-8 text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-4">
+                APROVEITE AGORA: <span className="text-slate-700">VOCÊ NÃO VAI ENCONTRAR ESSE PREÇO DEPOIS.</span>
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Guarantee Section */}
+      <section className="py-32 bg-[#114227] relative overflow-hidden">
+        {/* Dotted Pattern Background matching Screenshot 2 */}
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+        
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border-4 border-orange-500/30 bg-orange-500/10 mb-10 transform -rotate-12">
+              <ShieldCheck className="w-12 h-12 text-orange-500" strokeWidth={1.5} />
+            </div>
+
+            <h2 className="text-4xl md:text-6xl font-black text-white leading-tight mb-8">
+              Risco Zero: <span className="font-serif italic font-bold">Garantia Incondicional de 14 Dias</span>
+            </h2>
+
+            <p className="text-emerald-50/80 text-lg md:text-2xl leading-relaxed mb-12 max-w-3xl mx-auto">
+              Se, por qualquer motivo, sentir que este método não é para si, basta solicitar o reembolso de forma automática. Devolvemos <span className="text-white font-bold">100% do valor pago</span> de imediato — sem perguntas, sem burocracias. <br className="hidden md:block" /> O risco é totalmente nosso.
+            </p>
+
+            <a 
+              href={CHECKOUT_URL}
+              className="inline-flex items-center gap-3 bg-[#f97316] hover:bg-[#ea580c] text-white px-12 py-6 rounded-full font-black text-xl md:text-2xl transition-all shadow-2xl shadow-orange-950/40 transform hover:scale-105 active:scale-95 uppercase tracking-tight group"
+            >
+              QUERO EXPERIMENTAR 14 DIAS SEM RISCO
+              <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </a>
+
+            <div className="mt-10 flex flex-wrap justify-center items-center gap-6 text-[10px] md:text-xs font-bold uppercase tracking-widest text-emerald-400/60">
+              <div className="flex items-center gap-2">
+                <span>🔒</span> PAGAMENTO SEGURO
+              </div>
+              <div className="w-px h-4 bg-emerald-500/20" />
+              <div className="flex items-center gap-2">
+                <span>✅</span> ACESSO IMEDIATO
+              </div>
+              <div className="w-px h-4 bg-emerald-500/20" />
+              <div className="flex items-center gap-2">
+                <span>🛡️</span> GARANTIA DE 14 DIAS
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <SectionHeading>Perguntas Frequentes</SectionHeading>
+          <div className="mt-8 bg-slate-50/50 rounded-3xl p-4 md:p-8 border border-slate-100">
+            <FAQItem 
+              question="Como recebo o acesso ao livro?"
+              answer="O acesso é totalmente digital e imediato após a confirmação do pagamento. Receberá um e-mail automático com os dados de acesso para descarregar o livro principal e todos os bónus em formato PDF de alta qualidade."
+            />
+            <FAQItem 
+              question="Os ingredientes são fáceis de encontrar?"
+              answer="Sim, sem dúvida. As receitas foram adaptadas à realidade em Portugal. Encontrará tudo o que precisa em supermercados ou no seu comércio local."
+            />
+            <FAQItem 
+              question="Não tenho um congelador grande. Funciona para mim?"
+              answer="Sim. O método foi pensado para otimizar o espaço disponível. Vai aprender a utilizar recipientes e técnicas que ajudam a organizar melhor o congelador, independentemente do tamanho — seja um frigorífico combinado ou um modelo maior."
+            />
+            <FAQItem 
+              question="Durante quanto tempo tenho acesso?"
+              answer="O acesso é vitalício. Depois de adquirir, o conteúdo é seu para sempre, incluindo futuras atualizações que venham a ser adicionadas."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Final Bottom CTA */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <a 
+              href={CHECKOUT_URL}
+              className="inline-flex items-center gap-3 bg-[#1cc800] hover:bg-[#16a300] text-white px-16 py-8 rounded-full font-black text-2xl md:text-4xl transition-all shadow-2xl shadow-green-200 transform hover:scale-105 active:scale-95 uppercase tracking-tighter"
+            >
+              COMPRAR AGORA
+              <ChevronRight className="w-8 h-8 md:w-12 md:h-12 flex-shrink-0" />
+            </a>
+            <p className="mt-8 text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">
+               🔒 Pagamento 100% Seguro | Acesso Imediato
+            </p>
+          </motion.div>
         </div>
       </section>
 
